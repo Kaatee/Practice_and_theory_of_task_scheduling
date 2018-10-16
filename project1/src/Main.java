@@ -7,7 +7,11 @@ public class Main {
 
     public static void main(String[] args) {
         MakeSolution makeSolution = new MakeSolution();
-        makeSolution.makeSolution();
+
+        for (int k=0; k<10; k++){
+            makeSolution.makeSolution(k,500000,0.2f);
+        }
+
     }
 
 

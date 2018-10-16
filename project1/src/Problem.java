@@ -24,4 +24,9 @@ public class Problem {
 
         this.numberOfJobs = numberOfJobs;
     }
+
+    public Problem(ArrayList<Job> jobs) {
+
+        this.jobs = jobs;
+    }
 }

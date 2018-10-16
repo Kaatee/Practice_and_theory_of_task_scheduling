@@ -1,20 +1,20 @@
 public class Job {
-    private int penaltyP;
+    private int processingTimeP;
     private int earlinessA;
     private int tardinessB;
 
     public Job(int p, int a, int b){
-        penaltyP = p;
+        processingTimeP = p;
         earlinessA = a;
         tardinessB = b;
     }
 
-    public int getPenaltyP() {
-        return penaltyP;
+    public int getprocessingTimeP() {
+        return processingTimeP;
     }
 
-    public void setPenaltyP(int penaltyP) {
-        this.penaltyP = penaltyP;
+    public void setprocessingTimeP(int processingTimeP) {
+        this.processingTimeP = processingTimeP;
     }
 
     public int getEarlinessA() {
@@ -31,5 +31,9 @@ public class Job {
 
     public void setTardinessB(int tardinessB) {
         this.tardinessB = tardinessB;
+    }
+
+    public String toString(){
+        return "["+this.getprocessingTimeP()+","+this.getEarlinessA()+","+this.getTardinessB()+"]";
     }
 }
