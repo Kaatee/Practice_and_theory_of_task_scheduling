@@ -1,13 +1,17 @@
+import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
-public class Solution implements Comparable {
+public class Solution implements Comparable, Serializable {
     private ArrayList<Job> rankedJobs;
-    private float f;
+    private int f;
+    private int r;
+    private float h;
 
-    public Solution(ArrayList<Job> rankedJobs, float f) {
+    public Solution(ArrayList<Job> rankedJobs, int f, int r) {
         this.rankedJobs = rankedJobs;
         this.f = f;
+        this.r = r;
     }
 
     public ArrayList<Job> getRankedJobs() {
@@ -18,11 +22,21 @@ public class Solution implements Comparable {
         this.rankedJobs = rankedJobs;
     }
 
-    public float getF() {
+    public int getF() {
         return f;
     }
+    public int getR() {
+        return r;
+    }
+    public float getH() {
+        return h;
+    }
 
-    public void setF(float f) {
+    public void setH(float h) {
+        this.h = h;
+    }
+
+    public void setF(int f) {
         this.f = f;
     }
 

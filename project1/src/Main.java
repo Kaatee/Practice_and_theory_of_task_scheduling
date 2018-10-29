@@ -8,9 +8,9 @@ public class Main {
     public static void main(String[] args) {
         MakeSolution makeSolution = new MakeSolution();
 
-        for (int k=0; k<10; k++){
-            makeSolution.makeSolution(k,500000,0.2f);
-        }
+        //for (int k=0; k<10; k++){
+            makeSolution.makeSolution(1,1000000,0.8f);
+        //}
 
     }
 

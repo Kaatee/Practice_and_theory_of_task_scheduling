@@ -1,5 +1,6 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -7,51 +8,53 @@ import java.util.Scanner;
 
 public class MakeSolution {
     void makeSolution(int k, int numberOfIterations, float h){
-        ArrayList<Problem> problems = readFile();
+        FileHandler fh = new FileHandler();
+
+        /*
+        ArrayList<Problem> problems = fh.readFile();
         ArrayList<Solution> solutions = makeSolutions(problems.get(k), numberOfIterations, h);
-        Solution bestSolution = findBestSolution(solutions);
+        Solution bestSolution = findBestSolution(solutions, k, h);
         System.out.println("Moje najlepsze rozwiązanie dla k = " + k + " to: "+bestSolution.toString());
+        saveSolution(bestSolution, h, k);
+        */
+
+        Checker ch = new Checker();
+        String fileneme = "Solutions/sch10_1_8.txt";
+        Solution solutionToCheck = fh.readSolutionFromFile(fileneme);
+        float hToCheck = solutionToCheck.getH();
+        Problem pr = new Problem(solutionToCheck.getRankedJobs(), solutionToCheck.getRankedJobs().size());
+
+        Solution calcByme = new Solution(solutionToCheck.getRankedJobs(), calculeteF(pr,hToCheck,solutionToCheck.getR()), solutionToCheck.getR());
+        boolean isOK = ch.checkF(calcByme, solutionToCheck);
+        System.out.println("Sprawdzarka zwróciła: " + String.valueOf(isOK));
+        if(!isOK) System.out.println("Moje uszeregowanie: " + calcByme.toString() +"\n"+"Sprawdzane uszeregowanie: "+ solutionToCheck.toString());
     }
 
-    ArrayList<Problem> readFile(){
-        ArrayList<Problem> problems = new ArrayList<Problem>();
+
+
+    private void saveSolution(Solution solution, float h, int k){
+        FileWriter fileWr = null;
         try {
-
-            File file = new File("sch10.txt");
-            Scanner in = new Scanner(file);
-
-            int numOfProblems = Integer.parseInt(in.nextLine().replace(" ", ""));
-
-            for (int i = 0; i < numOfProblems; i++) {
-                int numOfJobs = Integer.parseInt(in.nextLine().replace(" ", ""));
-                Problem problem = new Problem(numOfJobs);
-                ArrayList<Job> jobs = new ArrayList<Job>();
-
-                for (int j = 0; j < numOfJobs; j++) {
-                    String line = in.nextLine();
-                    String[] parts = line.trim().split("\\s+");
-
-                    Job job = new Job(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]), Integer.parseInt(parts[2]));
-                    jobs.add(job);
-                }
-                problem.setJobs(jobs);
-                problems.add(problem);
-                //System.out.println(i + " SUM_P: "+calculateSumP(problem)+" F="+calculeteF(problem,0.2f));
+            String fileName = "sch"+String.valueOf(solution.getRankedJobs().size())+"_"+k+"_"+String.valueOf(h*10)+".txt"; //schN_k_h.txt
+            fileWr = new FileWriter(fileName);
+            fileWr.write(String.valueOf(h)+"\n"); //h
+            fileWr.write(String.valueOf(solution.getF())+"\n"); //f
+            fileWr.write(String.valueOf(solution.getRankedJobs().size())+"\n"); //n
+            fileWr.write(String.valueOf(solution.getR())+"\n");//r
+            for(Job j: solution.getRankedJobs()){
+                fileWr.write(j.toStringToSave()+"\n");
             }
 
-
-        } catch(FileNotFoundException e)
-        {
-            System.out.println("Problem z odczytem!");
+            fileWr.close();
         }
-        return problems;
+        catch(Exception e){}
     }
 
     ArrayList<Solution> makeSolutions(Problem problem, int numberOfIterations, float h){
         ArrayList<Solution> solutions = new ArrayList<>();
 
         for (int i=0; i<numberOfIterations; i++){
-            Solution sol = new Solution(problem.getJobs(), calculeteF(problem, h));
+            Solution sol = new Solution(problem.getJobs(), calculeteF(problem, h, 0),0);
             solutions.add(sol);
             problem = new Problem(rank(problem));
         }
@@ -59,11 +62,10 @@ public class MakeSolution {
         return solutions;
     }
 
-    Solution findBestSolution(ArrayList<Solution> solutions){
+    Solution findBestSolution(ArrayList<Solution> solutions, int k, float h){
         Collections.sort(solutions);
         return solutions.get(0);
     }
-
 
     int calculateSumP(Problem problem){
         int sum = 0;
@@ -72,19 +74,17 @@ public class MakeSolution {
         for(Job j: jobs){
             sum += j.getprocessingTimeP();
         }
-
         return sum;
     }
 
-    float calculeteF(Problem problem, float h){
-        float f = 0;
+    int calculeteF(Problem problem, float h, int r){
+        int f = 0;
         float sum_P = calculateSumP(problem);
         int d = (int) Math.floor(sum_P * h);
-        int numOfJobs = problem.getNumberOfJobs();
         ArrayList<Float> ciArray = calculateCi(problem.getJobs());
 
-        for (int j=0;j<problem.getJobs().size();j++){//Job j: rankedArray){
-            float ci=ciArray.get(j);
+        for (int j=0;j<problem.getJobs().size();j++){
+            float ci=ciArray.get(j)+r;
             f+= problem.getJobs().get(j).getEarlinessA()*Math.max(d-ci,0) + problem.getJobs().get(j).getTardinessB()*Math.max(ci-d, 0);
         }
         return f;

@@ -36,4 +36,8 @@ public class Job {
     public String toString(){
         return "["+this.getprocessingTimeP()+","+this.getEarlinessA()+","+this.getTardinessB()+"]";
     }
+
+    public String toStringToSave(){
+        return this.getprocessingTimeP()+"\t"+this.getEarlinessA()+"\t"+this.getTardinessB()+"\t";
+    }
 }

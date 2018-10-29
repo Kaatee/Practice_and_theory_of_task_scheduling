@@ -29,4 +29,10 @@ public class Problem {
 
         this.jobs = jobs;
     }
+
+    public Problem(ArrayList<Job> jobs, int numberOfJobs) {
+
+        this.jobs = jobs;
+        this.numberOfJobs = numberOfJobs;
+    }
 }
