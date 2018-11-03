@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class FileHandler {
-    ArrayList<Problem> readFile(){
+    ArrayList<Problem> readFile(String fileneme){
         ArrayList<Problem> problems = new ArrayList<Problem>();
         try {
 
-            File file = new File("sch10.txt");
+            File file = new File(fileneme);
             Scanner in = new Scanner(file);
 
             int numOfProblems = Integer.parseInt(in.nextLine().replace(" ", ""));
